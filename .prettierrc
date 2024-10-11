@@ -1,0 +1,15 @@
+{
+  "printWidth": 180,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "importOrder": ["^[./]", "^@/tests/(.*)$", "^@/shared/(.*)$", "^@/domain/(.*)$", "^@/application/(.*)$", "^@/adapters/(.*)$", "^@/drivers/(.*)$", "^@/entrypoint/(.*)$"],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"]
+}
