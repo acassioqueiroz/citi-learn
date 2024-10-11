@@ -1,9 +1,9 @@
 import { resolve } from '@/cross-cutting/dependency-injection/container';
 import { Course } from '@/domain/aggregates/course';
 import { CoreError } from '@/domain/errors/core-error';
-import { UniqueID } from '@/domain/value-objects/unique-id';
 import { OperationalError } from '@/application/errors/operational-error';
 import { UnitOfWork } from '@/application/ports/database/unit-of-work';
+import { EventPublisher } from '@/application/ports/messaging/EventPublisher';
 import { CoursesRepository } from '@/application/ports/repositories/courses-repository';
 import { TenantsRepository } from '@/application/ports/repositories/tenants-repository';
 
@@ -22,8 +22,10 @@ export class CreateCourse {
     private unitOfWork: UnitOfWork = resolve<UnitOfWork>('UnitOfWork'),
     private tenantsRepository = resolve<TenantsRepository>('TenantsRepository'),
     private coursesRepository = resolve<CoursesRepository>('CoursesRepository'),
+    private eventPublisher = resolve<EventPublisher>('EventPublisher'),
   ) {
     this.coursesRepository.attachUnitOfWork(this.unitOfWork);
+    this.eventPublisher.attachUnitOfWork(this.unitOfWork);
   }
 
   private async handleError(error: unknown) {
@@ -43,11 +45,21 @@ export class CreateCourse {
     if (!tenant) {
       // throw new NotFoundError('Tenant not found', 'TENANT_NOT_FOUND');
     }
-    console.log(UniqueID.create().getValue());
     const course = Course.create(tenantId, title, description);
     try {
       await this.unitOfWork.start();
       await this.coursesRepository.save(course);
+      await this.eventPublisher.publish({
+        channel: 'course',
+        type: 'created',
+        shardingKey: course.getId(),
+        payload: {
+          courseId: course.getId(),
+          tenantId: course.getTenantId(),
+          title: course.getTitle(),
+          description: course.getDescription(),
+        },
+      });
       await this.unitOfWork.commit();
     } catch (error) {
       await this.handleError(error);

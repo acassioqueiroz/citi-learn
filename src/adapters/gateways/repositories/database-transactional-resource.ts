@@ -4,7 +4,7 @@ import { AdapterError } from '@/adapters/errors/adapter-error';
 import { AdapterUnitOfWork } from '@/adapters/gateways/database/adapter-unit-of-work';
 import { DatabaseConnection } from '@/adapters/ports/database/database-connection';
 
-export class BaseTransacionalRepository implements TransactionalResource {
+export class DatabaseTransactionalResource implements TransactionalResource {
   private unitOfWork?: AdapterUnitOfWork;
 
   constructor(private connection = resolve<DatabaseConnection>('DatabaseConnection')) {}

@@ -1,9 +1,9 @@
 import { Course } from '@/domain/aggregates/course';
 import { CoursesRepository } from '@/application/ports/repositories/courses-repository';
 import { DatabaseError } from '@/adapters/errors/database-error';
-import { BaseTransacionalRepository } from '@/adapters/gateways/repositories/pg-base-transacional-repository';
+import { DatabaseTransactionalResource } from '@/adapters/gateways/repositories/database-transactional-resource';
 
-export class PgCoursesRepository extends BaseTransacionalRepository implements CoursesRepository {
+export class PgCoursesRepository extends DatabaseTransactionalResource implements CoursesRepository {
   async save(course: Course): Promise<void> {
     const query = `
     INSERT INTO courses (id, tenant_id, title, description, created_at, updated_at)

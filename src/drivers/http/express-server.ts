@@ -1,3 +1,5 @@
+import { resolve } from '@/cross-cutting/dependency-injection/container';
+import { Logger } from '@/cross-cutting/logging/logger';
 import express, { Express, json } from 'express';
 import { Server } from 'http';
 import { HttpController } from '@/adapters/controllers/http-controller';
@@ -7,7 +9,7 @@ class ExpressServer {
   private app: Express;
   private server?: Server;
 
-  constructor() {
+  constructor(private readonly logger = resolve<Logger>('Logger')) {
     const app = express();
     app.use(json());
     this.app = app;
@@ -34,6 +36,7 @@ class ExpressServer {
       } catch (error) {
         if (error instanceof Error) {
           response.status(500).json({ error: error.message });
+          this.logger.error(error.stack ?? error.message);
           return;
         }
         response.status(500).json({ error: 'Internal server error' });

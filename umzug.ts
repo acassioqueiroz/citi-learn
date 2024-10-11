@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+import { register } from '@/cross-cutting/dependency-injection/container';
+import { WinstonLogger } from '@/cross-cutting/logging/winston-logger';
 import 'dotenv/config';
 import { join } from 'path';
 import { MigrationMeta, Umzug } from 'umzug';
 import { PgDatabaseConnection } from '@/drivers/database/pg-database-connection';
 
 const migrationFolder = join(__dirname, './src/drivers/migrations');
+
+register('Logger', new WinstonLogger());
 
 const postgresConnection = new PgDatabaseConnection();
 const setupMigrations = async () => {
