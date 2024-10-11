@@ -6,7 +6,6 @@ export interface PublishEvent {
   shardingKey: string;
   payload: unknown;
 }
-
-export interface EventPublisher extends TransactionalResource {
+export interface EventPublisherGateway extends TransactionalResource {
   publish(event: PublishEvent): Promise<void>;
 }

@@ -3,11 +3,8 @@ import { PgDatabaseConnection } from '@/drivers/database/pg-database-connection'
 
 export const up: MigrationFn<PgDatabaseConnection> = async ({ context: db }: { context: PgDatabaseConnection }) => {
   await db.query(`
-    CREATE TYPE outbox_status AS ENUM ('pending', 'sent', 'failed');
-  `);
-
-  await db.query(`
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    CREATE TYPE outbox_status AS ENUM ('pending', 'processing', 'published', 'failed');
+    
     CREATE TABLE outbox_events (
       id UUID PRIMARY KEY,
       channel VARCHAR(255) NOT NULL,

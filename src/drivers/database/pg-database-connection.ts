@@ -34,9 +34,6 @@ export class PgDatabaseConnection implements DatabaseConnection {
     return db.any(text, params);
   }
   async startTransaction(): Promise<void> {
-    if (this.client) {
-      throw new DatabaseError('A transaction is already in progress.');
-    }
     this.logger.trace('Starting transaction...');
     this.client = await db.connect();
     try {

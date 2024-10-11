@@ -1,7 +1,8 @@
-import globals from 'globals';
 import js from '@eslint/js';
 import ts from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
+import globals from 'globals';
+
 export default [
   {
     files: ['**/*.{js,mjs,cjs,ts}'],
@@ -9,28 +10,31 @@ export default [
       parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
-        sourceType: 'module'
+        sourceType: 'module',
       },
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...globals.jest
-      }
+        ...globals.jest,
+      },
+    },
+    env: {
+      node: true,
     },
     plugins: {
-      '@typescript-eslint': ts
+      '@typescript-eslint': ts,
     },
     settings: {
       'import/resolver': {
         typescript: {
           alwaysTryTypes: true,
-          project: './tsconfig.json'
+          project: './tsconfig.json',
         },
         alias: {
           map: [['@', './src']],
-          extensions: ['.ts', '.js', '.jsx', '.json']
-        }
-      }
+          extensions: ['.ts', '.js', '.jsx', '.json'],
+        },
+      },
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -39,9 +43,9 @@ export default [
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['../*']
-        }
-      ]
-    }
-  }
+          patterns: ['../*'],
+        },
+      ],
+    },
+  },
 ];

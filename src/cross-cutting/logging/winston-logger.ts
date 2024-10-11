@@ -1,12 +1,14 @@
 import { Logger } from '@/cross-cutting/logging/logger';
 import winston from 'winston';
+import { loggerConfig } from '@/drivers/configs/logger';
 
-type LogLevel = 'info' | 'error' | 'warn' | 'info' | 'debug' | 'trace';
+export type LogLevel = 'info' | 'error' | 'warn' | 'info' | 'debug' | 'trace';
 
 export class WinstonLogger implements Logger {
   private logger: winston.Logger;
 
-  constructor(level: LogLevel = 'info') {
+  constructor() {
+    const level = loggerConfig.level;
     this.logger = winston.createLogger({
       level: level === 'trace' ? 'silly' : level,
       format: winston.format.combine(winston.format.timestamp(), winston.format.cli()),

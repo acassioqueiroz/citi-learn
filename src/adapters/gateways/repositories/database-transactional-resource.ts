@@ -18,9 +18,9 @@ export class DatabaseTransactionalResource implements TransactionalResource {
   }
 
   protected getConnection(): DatabaseConnection {
-    if (this.unitOfWork) {
-      return this.unitOfWork.getConnection();
+    if (!this.unitOfWork) {
+      throw new AdapterError('No UnitOfWork attached to the resource.');
     }
-    return this.connection;
+    return this.unitOfWork.getConnection();
   }
 }

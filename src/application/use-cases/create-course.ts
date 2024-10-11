@@ -3,7 +3,7 @@ import { Course } from '@/domain/aggregates/course';
 import { CoreError } from '@/domain/errors/core-error';
 import { OperationalError } from '@/application/errors/operational-error';
 import { UnitOfWork } from '@/application/ports/database/unit-of-work';
-import { EventPublisher } from '@/application/ports/messaging/EventPublisher';
+import { EventPublisherGateway } from '@/application/ports/messaging/event-publisher-gateway';
 import { CoursesRepository } from '@/application/ports/repositories/courses-repository';
 import { TenantsRepository } from '@/application/ports/repositories/tenants-repository';
 
@@ -22,7 +22,7 @@ export class CreateCourse {
     private unitOfWork: UnitOfWork = resolve<UnitOfWork>('UnitOfWork'),
     private tenantsRepository = resolve<TenantsRepository>('TenantsRepository'),
     private coursesRepository = resolve<CoursesRepository>('CoursesRepository'),
-    private eventPublisher = resolve<EventPublisher>('EventPublisher'),
+    private eventPublisher = resolve<EventPublisherGateway>('EventPublisherGateway'),
   ) {
     this.coursesRepository.attachUnitOfWork(this.unitOfWork);
     this.eventPublisher.attachUnitOfWork(this.unitOfWork);
