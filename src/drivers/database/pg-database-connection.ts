@@ -35,6 +35,9 @@ export class PgDatabaseConnection implements DatabaseConnection {
   }
   async startTransaction(): Promise<void> {
     this.logger.trace('Starting transaction...');
+    if (this.client) {
+      throw new DatabaseError('Cannot start transaction: transaction already in progress.');
+    }
     this.client = await db.connect();
     try {
       await this.client.query('BEGIN');
@@ -58,6 +61,7 @@ export class PgDatabaseConnection implements DatabaseConnection {
       throw new DatabaseError('Transaction commit failed.', error);
     } finally {
       this.client.done();
+      this.client = null;
     }
   }
   async rollbackTransaction(): Promise<void> {
@@ -72,6 +76,7 @@ export class PgDatabaseConnection implements DatabaseConnection {
       throw new DatabaseError('Transaction rollback failed.', error);
     } finally {
       this.client.done();
+      this.client = null;
     }
   }
   async end(): Promise<void> {

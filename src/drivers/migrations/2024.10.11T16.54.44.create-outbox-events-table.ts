@@ -16,11 +16,13 @@ export const up: MigrationFn<PgDatabaseConnection> = async ({ context: db }: { c
       created_at TIMESTAMPTZ NOT NULL,
       updated_at TIMESTAMPTZ NOT NULL
     );
+    CREATE INDEX IDX_OUTBOX_CREATED_AT ON outbox_events (created_at);
   `);
 };
 
 export const down: MigrationFn<PgDatabaseConnection> = async ({ context: db }: { context: PgDatabaseConnection }) => {
   await db.query(`
+    DROP INDEX IF EXISTS IDX_OUTBOX_CREATED_AT;
     DROP TABLE IF EXISTS outbox_events;
     DROP TYPE IF EXISTS outbox_status;
   `);

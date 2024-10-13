@@ -32,10 +32,11 @@ function registerDependencies() {
   // application
   register('CreateCourse', () => new CreateCourse());
   // Event Publisher
-  register('EventPublisherWorker', new EventPublisherWorker());
+  const eventPublisherWorker = new EventPublisherWorker();
   const outboxObserver = new OutboxObserver();
   const outboxNotifier = new Notifier();
   outboxNotifier.addObserver(outboxObserver);
+  register('EventPublisherWorker', eventPublisherWorker);
   register('OutboxNotifier', outboxNotifier);
   register('OutboxObserver', outboxObserver);
 }
@@ -64,7 +65,7 @@ function startServer(controllers: HttpController[], port: number) {
 function main() {
   registerDependencies();
   const controllers = createControllers();
-  startServer(controllers, Number.parseInt(argv[2]) ?? 3000);
+  startServer(controllers, Number.parseInt(argv[2]) || 3000);
   startWorkers();
 }
 

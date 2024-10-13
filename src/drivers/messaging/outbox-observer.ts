@@ -3,9 +3,8 @@ import { Observer } from '@/cross-cutting/observer';
 import { EventPublisherWorker } from '@/drivers/messaging/event-publisher-worker';
 
 export class OutboxObserver implements Observer {
-  constructor(private eventPublisherWorker = resolve<EventPublisherWorker>('EventPublisherWorker')) {}
-
   update(): void {
-    this.eventPublisherWorker.delayedStart();
+    const eventPublisherWorker = resolve<EventPublisherWorker>('EventPublisherWorker');
+    eventPublisherWorker.scheduleEventFlush();
   }
 }

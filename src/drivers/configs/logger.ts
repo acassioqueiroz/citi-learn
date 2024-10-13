@@ -5,7 +5,7 @@ interface LoggerConfig {
 }
 
 const loggerConfig: LoggerConfig = {
-  level: 'trace',
+  level: 'debug',
 };
 
 export { loggerConfig };
